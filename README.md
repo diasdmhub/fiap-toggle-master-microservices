@@ -38,8 +38,6 @@ A arquitetura do ToggleMaster foi segmentada nos seguintes 5 microsserviços, ca
 
 Duas formas de implementação são apresentadas, uma em ambiente local com a utilização de gerenciadores de containers como o Docker ou Podman, e outra em ambiente "cloud", com o AWS EKS.
 
-> **ℹ️ Apesar da primeira implementação ser local, ela também utiliza os recursos SQS e DynamoDB da AWS pois os códigos originais não foram preparados para outras opções.**
-
 - ↗️ [**Ambiente local**][ambientelocal]
 - ↗️ [**Ambiente Kubernetes**][ambientekube]
 

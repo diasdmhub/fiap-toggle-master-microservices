@@ -4,18 +4,20 @@ A implantação do ToggleMaster em ambiente local utiliza arquivos de instruçõ
 
 <BR>
 
-## Prerequisitos
+## 📋 Prerequisitos
 
-- Copie o código-fonte dos microserviços. Recomenda-se clonar este repositório com o **Git**.
+- Copie o código-fonte dos microserviços e acesse o diretório `togglelocal`. Recomenda-se clonar este repositório com o **Git**.
 - O terminal local deve estar autenticado na AWS com o [AWS CLI][awscli] para se conectar ao SQS e ao DynamoDB.
 - É necessário uma ferramenta de gestão de containers como o [Docker][docker] ou o [Podman][podman].
 - É necessário também utilizar a ferramenta [Docker Compose][dockercompose] ou o tradutor [Podman Compose][podmancompose].
 
 <BR>
 
-## Implementação
+## 🛠️ Implementação
 
 ⚠️ **A implementação do sistema ToggleMaster em ambiente local envolve algumas etapas que devem ser seguidas atentamente. Devido às interdependências entre os microserviços, é recomendável avançar na ordem sugerida abaixo.**
+
+> **Nesta demonstração utilizei o Podman. Altere o comando `podman` por `docker` caso esteja utilizando o Docker.**
 
 <BR>
 
@@ -56,7 +58,7 @@ Preencha as variáveis de ambiente com os valores apropriados para cada microser
 
 #### [➡️ `.env_aws`](./.env_aws)
 
-> - É necessário obter as [credenciais da console da AWS][awsauth] para que os containers consigam acessar os serviços da AWS.
+> - É necessário incluir as [credenciais da console da AWS][awsauth] para que os containers consigam acessar os serviços da AWS.
 
 #### [➡️ `.env_psql`](./.env_psql)
 
@@ -89,19 +91,20 @@ Preencha as variáveis de ambiente com os valores apropriados para cada microser
 
 <BR>
 
-### 2. Inicialização
+### 3. Inicialização
 
-Após ajustar todas as variáveis do ambiente, os microserviços podem ser incializados.
+Após ajustar todas as variáveis do ambiente, os microserviços podem ser inicializados.
 
-- **2.1** Inicalize o ambiente com o comando abaixo. Ele fara o build e a execução das imagens dos microserviços.
+- **3.1** Inicialize o ambiente com o comando a seguir. Ele fará o build e a execução das imagens dos microserviços.
 
 ```bash
 podman compose up -d ; podman image prune -f
 ```
 
-- **2.2** Verifique a execução dos containers com o comando abaixo `podman ps -a`. Todos devem ter o status `healthy`.
+- **3.2** Verifique a execução dos containers com o comando a seguir. Todos devem apresentar o status `healthy`.
 
 ```bash
+# podman ps -a
 CONTAINER ID  IMAGE                                    COMMAND               CREATED        STATUS                  PORTS                   NAMES
 4ce7d78cf1a5  docker.io/library/redis:alpine           redis-server          2 minutes ago  Up 2 minutes (healthy)  0.0.0.0:6379->6379/tcp  redis
 d6d9b061410d  localhost/togglelocal_psql:latest        postgres              2 minutes ago  Up 2 minutes (healthy)  0.0.0.0:5432->5432/tcp  postgresql
@@ -112,7 +115,7 @@ d6d9b061410d  localhost/togglelocal_psql:latest        postgres              2 m
 a415d25cfc39  localhost/togglelocal_analytics:latest   gunicorn --bind 0...  2 minutes ago  Up 2 minutes (healthy)  0.0.0.0:8005->8005/tcp  analytics-service
 ```
 
-- **2.3** Para enviar mensagens ao sistema ToggleMaster, é necessário configurar uma chave de autenticação a partir do microserviço de autenticação. Conforme o repositório original do `auth-service`, gere um token com o comando abaixo. Guarde o nome do serviço criado e seu token.
+- **3.3** Para enviar mensagens ao sistema ToggleMaster, é necessário autenticar o `evaluation-service` com uma chave de autenticação criada pelo microserviço de autenticação. Conforme o repositório [original do `auth-service`][authserv], gere um token com o comando a seguir.
 
 > **Utilize no "header" do comando `curl` a mesma senha "master" salva no `.env_auth`.**
 
@@ -121,20 +124,79 @@ a415d25cfc39  localhost/togglelocal_analytics:latest   gunicorn --bind 0...  2 m
 curl -X POST http://localhost:8001/admin/keys \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer admin123" \
-    -d '{"name": "admin-service"}'
+    -d '{"name": "evaluation-service"}'
 # Resposta com o token
 {
-    "name": "admin-service",
+    "name": "evaluation-service",
     "key": "tm_key_37e1...",
     "message": "Guarde esta chave com segurança! Você não poderá vê-la novamente."
 }
 ```
 
-- **2.4** Salve a chave `tm_key_...` no arquivo de variáveis `.env_evaluation` do Evaluation Service (_SERVICE_API_KEY="__CHAVE_DE_SERVICO__"_), e reinicie todos os containers.
+- **3.4** Salve a chave `tm_key_...` no arquivo de variáveis `.env_evaluation` do Evaluation Service (_`SERVICE_API_KEY="__CHAVE_DE_SERVICO__"`_), e reinicie os containers.
 
 ```bash
 podman compose down && podman compose up -d
 ```
+
+<BR>
+
+### 4. Validação
+
+Nesta etapa, o sistema ToggleMaster deve estar ativo e pronto para receber mensagens. Para validar seu funcionamento, é necessário criar uma chave de autenticação com o microserviço `auth-service`, uma "feature flag" com o microserviço `flag-service` e uma regra de segmentação com o microserviço `targeting-service`.
+
+- **4.1** Crie a flag e sua regra de segmentação com os comandos a seguir.
+
+```bash
+# Criar chave de autenticação
+FLAG_TOKEN=$(curl -X POST http://localhost:8001/admin/keys \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer SUA_MASTER_API" \
+    -d '{"name": "toggle-flag"}' | sed -n 's/.*"key":"\([^"]*\)".*/\1/p')
+
+# Criar feature flag com a chave 
+curl -X POST http://localhost:8002/flags \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $FLAG_TOKEN" \
+    -d '{
+            "name": "enable-feature",
+            "description": "Ativa o novo recurso para os usuários",
+            "is_enabled": true
+        }'
+
+# Criar uma regra de segmentação
+curl -X POST http://localhost:8003/rules \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $FLAG_TOKEN" \
+    -d '{
+            "flag_name": "enable-feature",
+            "is_enabled": true,
+            "rules": {
+                "type": "PERCENTAGE",
+                "value": 50
+            }
+        }'
+```
+
+- **4.2** Envie mensagens para o ToggleMaster. Neste teste, são enviadas **1.000** mensagens, que são enfileiradas no SQS. O `analytics-service` processa as mensagens, enviando-as para a tabela do DynamoDB. Nesse momento, é possível observar o enfileiramento de mensagens no SQS e as mensagens sendo gravadas no DynamoDB. Utilize o console da AWS para isso.
+
+> ⚠️ **Este teste envia muitas mensagens ao ToggleMaster e pode gerar um alto processamento em seu dispositivo. Ele também pode levar um tempo, pois o serviço precisa se comunicar com a AWS. Se preferir, basta reduzir o número de mensagens enviadas para acelerar o processo.**
+
+```bash
+for i in $(seq 1000); do { curl "http://localhost:8004/evaluate?user_id=teste-$i&flag_name=enable-feature" ; } done
+```
+
+- Opcionalmente, é possível observar as mensagens sendo processadas no log do `analytics-service`, o que pode levar um tempo.
+
+```bash
+podman logs -f analytics-service
+```
+
+<BR>
+
+## 🤔 Observação
+
+- ℹ️ Apesar da implementação ocorrer em ambiente local, ela também utiliza os recursos SQS e DynamoDB da AWS pois os códigos originais não foram preparados para outras opções.
 
 [awscli]: https://aws.amazon.com/cli/
 [docker]: https://docs.docker.com/
@@ -144,3 +206,4 @@ podman compose down && podman compose up -d
 [awsauth]: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in.html
 [criarsqs]: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/creating-sqs-standard-queues.html
 [analyticsserv]: https://github.com/FIAP-TCs/analytics-service
+[authserv]: https://github.com/FIAP-TCs/auth-service
