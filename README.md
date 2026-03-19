@@ -8,7 +8,7 @@ Nesta fase, a aplicação foi segregada em cinco microsserviços. Eles serão co
 
 <BR>
 
-## Arquitetura
+## 🏛️ Arquitetura
 
 A arquitetura do ToggleMaster foi segmentada nos seguintes 5 microsserviços, cada um com seu respectivo repositório original:
 
@@ -45,7 +45,7 @@ Duas formas de implementação são apresentadas, uma em ambiente local com a ut
 
 <BR>
 
-## Observações
+## 🗒️ Observações
 
 [sistoggle]: https://github.com/FIAP-TCs
 [fase1]: https://github.com/diasdmhub/fiap-toggle-master-monolith
