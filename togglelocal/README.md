@@ -180,7 +180,7 @@ curl -X POST http://localhost:8003/rules \
 
 - **4.2** Envie mensagens para o ToggleMaster. Neste teste, são enviadas **1.000** mensagens, que são enfileiradas no SQS. O `analytics-service` processa as mensagens, enviando-as para a tabela do DynamoDB. Nesse momento, é possível observar o enfileiramento de mensagens no SQS e as mensagens sendo gravadas no DynamoDB. Utilize o console da AWS para isso.
 
-> ⚠️ **Este teste envia muitas mensagens ao ToggleMaster e pode gerar um alto processamento em seu dispositivo. Ele também pode levar um tempo, pois o serviço precisa se comunicar com a AWS. Se preferir, basta reduzir o número de mensagens enviadas para acelerar o processo.**
+    > ⚠️ **Este teste envia muitas mensagens ao ToggleMaster e pode gerar um alto processamento em seu dispositivo. Ele também pode levar um tempo, pois o serviço precisa se comunicar com a AWS. Se preferir, basta reduzir o número de mensagens enviadas para acelerar o processo.**
 
 ```bash
 for i in $(seq 1000); do { curl "http://localhost:8004/evaluate?user_id=teste-$i&flag_name=enable-feature" ; } done
