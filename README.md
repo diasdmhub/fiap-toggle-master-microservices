@@ -85,19 +85,29 @@ Outras opções que poderiam atender à necessidade de databases de chave-valor 
 
 <BR>
 
-### Observação quanto ao NGINX Ingress Controller
+### NGINX Ingress Controller
 
 O roteiro do Tech-challenge nos instrui a instalar o [NGINX Ingress Controller][nginx], no entanto, esse recurso "ingress" possui uma programação para o seu fim de vida, e está com a manutenção reduzida (_best-effort_). Além disso, a própria Linux Foundation do Kubernetes sugere o uso do Gateway API, que é uma nova geração de APIs de Ingress, Load Balancing e Service Mesh.
 
 <BR>
 
+#### Laboratório AWS
+
+Existem limitações no ambiente de laboratório oferecido pela FIAP que prejudicam seriamente a continuidade do Tech-challenge. Por exemplo, os papéis de acesso (_LabRole_) não são totalmente compatíveis com os requisitos do cluster EKS. O "NodeGroup" do cluster, não é formado corretamente, e as instâncias EC2 criadas não se unem adequadamente ao Control-plane Kubernetes. Inclusive, isso ficou evidente na apresentação (_live_) "Criando cluster k8s na AWS".
+
+<BR>
+
 ### Conclusão
 
-Diante de tudo isso, eu ressalto essas questões, pois entendo que uma preparação diferente desse sistema de microserviços pode talvez:
+Diante de tudo isso, as questões acima são ressaltadas, pois uma preparação diferente de todo o ecossistema de microserviços e ambiente em nuvem pode talvez:
 
 - Trazer mais facilidade na migração de cloud providers, se necessário;
 - Evitar um "vendor lock-in", ou seja, evitar ficar preso a somente uma ferramenta ou fornecedor;
 - Reduzir gastos com o ambiente.
+
+Por fim, acredito que algumas limitações tornam o Tech-challenge mais moroso que o necessário e, fatalmente, estão prejudicam a construção do desafio da Fase 2, pois trazem uma carga desnecessária de troubleshooting que estão fora de contexto com a disciplina.
+
+Entendo que essa é uma realidade de muitas aplicações em ambientes de produção. Contudo, para a boa continuidade do aprendizado na FIAP, acredito que o desafio precisa ser revisado com parcimônia, a fim de otimizar a aprendizagem.
 
 [sistoggle]: https://github.com/FIAP-TCs
 [fase1]: https://github.com/diasdmhub/fiap-toggle-master-monolith
@@ -106,8 +116,8 @@ Diante de tudo isso, eu ressalto essas questões, pois entendo que uma preparaç
 [targetserv]: https://github.com/FIAP-TCs/targeting-service
 [evalserv]: https://github.com/FIAP-TCs/evaluation-service
 [analyticserv]: https://github.com/FIAP-TCs/analytics-service
-[ambientelocal]: ./togglelocal
-[ambientekube]: ./togglekube
+[ambientelocal]: ./local
+[ambientekube]: ./kube
 [dynamolocal]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
 [nginx]: https://kubernetes.github.io/ingress-nginx/
 [authissue]: https://github.com/FIAP-TCs/auth-service/issues/2

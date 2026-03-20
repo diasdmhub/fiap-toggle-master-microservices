@@ -7,6 +7,7 @@ A implantação do ToggleMaster em ambiente local utiliza arquivos de instruçõ
 ## 📋 Prerequisitos
 
 - Copie o código-fonte dos microserviços e acesse o diretório `togglelocal`. Recomenda-se clonar este repositório com o **Git**.
+    - `git clone https://github.com/diasdmhub/fiap-toggle-master-microservices.git && cd fiap-toggle-master-microservices/togglelocal`
 - O terminal local deve estar autenticado na AWS com o [AWS CLI][awscli] para se conectar ao SQS e ao DynamoDB.
 - É necessário uma ferramenta de gestão de containers como o [Docker][docker] ou o [Podman][podman].
 - É necessário também utilizar a ferramenta [Docker Compose][dockercompose] ou o tradutor [Podman Compose][podmancompose].
