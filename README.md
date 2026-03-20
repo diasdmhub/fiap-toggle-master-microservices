@@ -55,7 +55,7 @@ Os repositórios originais foram integrados a este com as correções necessári
 
 <BR>
 
-#### Instâncias RDS
+### Instâncias RDS
 
 O roteiro do desafio pede a criação de três instâncias de forma independente. Diante disso, surge a dúvida sobre a necessidade de se criar 3 "instâncias independentes" RDS PostgreSQL na AWS.
 
@@ -91,23 +91,25 @@ O roteiro do Tech-challenge nos instrui a instalar o [NGINX Ingress Controller][
 
 <BR>
 
-#### Laboratório AWS
+### Laboratório AWS
 
 Existem limitações no ambiente de laboratório oferecido pela FIAP que prejudicam seriamente a continuidade do Tech-challenge. Por exemplo, os papéis de acesso (_LabRole_) não são totalmente compatíveis com os requisitos do cluster EKS. O "NodeGroup" do cluster, não é formado corretamente, e as instâncias EC2 criadas não se unem adequadamente ao Control-plane Kubernetes. Inclusive, isso ficou evidente na apresentação (_live_) "Criando cluster k8s na AWS".
 
 <BR>
 
-### Conclusão
+## Conclusão
 
-Diante de tudo isso, as questões acima são ressaltadas, pois uma preparação diferente de todo o ecossistema de microserviços e ambiente em nuvem pode talvez:
+Diante de tudo isso, as questões acima são ressaltadas porque uma adequação de todo o ecossistema de microserviços e do ambiente em nuvem pode **trazer mais facilidade na migração entre provedores de cloud, se necessário; evitar o "vendor lock‑in", ou seja, impedir que fiquemos presos a uma única ferramenta ou fornecedor; e reduzir os custos operacionais**.
 
-- Trazer mais facilidade na migração de cloud providers, se necessário;
-- Evitar um "vendor lock-in", ou seja, evitar ficar preso a somente uma ferramenta ou fornecedor;
-- Reduzir gastos com o ambiente.
+No entanto, algumas limitações do Tech‑challenge têm tornado o processo mais moroso do que o necessário e, infelizmente, acabam prejudicando a construção da Fase 2. Essas restrições geram uma carga extra de troubleshooting que foge ao escopo da disciplina.
 
-Por fim, acredito que algumas limitações tornam o Tech-challenge mais moroso que o necessário e, fatalmente, estão prejudicam a construção do desafio da Fase 2, pois trazem uma carga desnecessária de troubleshooting que estão fora de contexto com a disciplina.
+Entendo que esse tipo de situação é comum em aplicações de produção, mas, para a boa continuidade do aprendizado na FIAP, seria interessante revisar o desafio com parcimônia, focando em:
 
-Entendo que essa é uma realidade de muitas aplicações em ambientes de produção. Contudo, para a boa continuidade do aprendizado na FIAP, acredito que o desafio precisa ser revisado com parcimônia, a fim de otimizar a aprendizagem.
+- Simplificar as etapas que não agregam valor ao objetivo principal;
+- Alinhar as exigências técnicas ao nível de conhecimento esperado dos alunos;
+- Reduzir a necessidade de intervenções fora do contexto da disciplina, permitindo que o tempo seja dedicado ao aprendizado conceitual e à aplicação de boas práticas.
+
+Com essas ajustes, o desafio pode se tornar mais fluido, mantendo o rigor técnico sem sobrecarregar os participantes, o que favorece uma experiência de aprendizado mais produtiva e motivadora.
 
 [sistoggle]: https://github.com/FIAP-TCs
 [fase1]: https://github.com/diasdmhub/fiap-toggle-master-monolith
