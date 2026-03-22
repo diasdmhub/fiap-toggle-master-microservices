@@ -62,6 +62,13 @@ spec:
           timeoutSeconds: 2
           failureThreshold: 5
 
+# Referência da URL do SQS para o KEDA
+        env:
+        - name: AWS_SQS_URL_SEC
+          valueFrom:
+            secretKeyRef:
+              name: sqs-secrets
+              key: AWS_SQS_URL
 ---
 
 # Definição de Service para a aplicação analytics

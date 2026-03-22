@@ -10,6 +10,6 @@ data:
   # Porta em que o analytics-service receberá requisições
   PORT: "8005"
   # Nome da tabela DynamoDB
-  AWS_DYNAMODB_TABLE: "ToggleMasterAnalytics"
+  AWS_DYNAMODB_TABLE: "fiap-toggle-dynamo-table"
   # Região da fila SQS e DynamoDB
   AWS_REGION: "us-east-1"

@@ -1,45 +1,41 @@
-# Mapeia a secret AWS_SQS_URL para o parâmetro queueURL do scaler
 apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:
-  name: evaluation-service-trigger-auth
+  name: analytics-service-trigger-auth
   namespace: toggle
 spec:
-  secretTargetRef:
-  - parameter: queueUrl
-    name: sqs-secrets
-    key: AWS_SQS_URL
+  podIdentity:
+    provider: aws
 
 ---
 
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: evaluation-service-scale
+  name: analytics-service-scale
   namespace: toggle
 spec:
   scaleTargetRef:
-    name: evaluation-service
+    name: analytics-service
 
 # Mínimo de 0 pods caso não haja mensagens na fila
   minReplicaCount: 0
-  maxReplicaCount: 10
+  maxReplicaCount: 5
   pollingInterval: 15
 
 # 5 minutos sem mensagens antes de zerar os pods
   cooldownPeriod: 300
   triggers:
   - type: aws-sqs-queue
+    authenticationRef:
+      name: analytics-service-trigger-auth
     metadata:
+# Mapeia a secret AWS_SQS_URL a partir do deployment
+      queueURLFromEnv: AWS_SQS_URL_SEC
 
 # Indica o tamanho da fila até escalar os pods
       queueLength: "10"
       awsRegion: "us-east-1"
-      identityOwner: operator
 
 # Threshold de 1 mensagem ativa os pods
       activationQueueLength: "1"
-
-# Referencia o TriggerAuthentication
-    authenticationRef:
-      name: evaluation-sqs-trigger

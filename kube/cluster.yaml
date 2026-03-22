@@ -9,13 +9,10 @@ metadata:
 managedNodeGroups:
   - name: fiap-toggle-eks-cluster-nodes
     instanceType: t3.small
-    desiredCapacity: 1
+    desiredCapacity: 2
     minSize: 1
     maxSize: 4
     volumeSize: 20
-    ssh:
-      allow: true
-      publicKeyName: dan
     labels:
       alpha.eksctl.io/cluster-name: fiap-toggle-eks-cluster
 

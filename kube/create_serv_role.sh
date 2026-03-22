@@ -13,7 +13,7 @@ POLICY_LOAD=$(sed "s/_ACCOUNT_ID_/$ACC_ID/g" toggle-policy.json)
 eksctl utils associate-iam-oidc-provider --cluster "$CLUSTER_NAME" --approve
 
 # CRIA A POLÍTICA EXTRA DA TOGGLEMASTER
-aws iam create-policy --policy-name "$POLICY_NAME" --policy-document "$POLICY_LOAD"
+aws iam create-policy --policy-name "$POLICY_NAME" --policy-document "$POLICY_LOAD" 2>/dev/null || true
 
 # CRIA UMA CONTA DE SERVIÇO GERENCIADA POR OPENID COM AS POLÍTICAS PADRÕES E EXTRAS
 eksctl create iamserviceaccount \
